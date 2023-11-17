@@ -19,7 +19,7 @@ const ProductDetailsComponent = ({ product }) => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-12 lg:px-8 py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-12 lg:px-8 py-20 my-10 shadow-border rounded-3xl">
             <div className="flex flex-col md:flex-row -mx-4">
                 <div className="md:flex-1 px-4 relative min-h-[256px] max-h-[512px]">
                     <Image
@@ -30,15 +30,15 @@ const ProductDetailsComponent = ({ product }) => {
                     />
                 </div>
                 <div className="md:flex-1 px-4">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{product.name}</h2>
+                    <h2 className="text-3xl font-bold mb-2">{product.name}</h2>
                     <div className="mr-4 mt-4">
-                        <span className="category-product-price">{`Price: ${product.price} zł`}</span>
+                        <span className="text-2xl font font-semibold">{`Price: ${product.price} zł`}</span>
                     </div>
                     <div className="mt-10">
-                        <span className="font-bold text-gray-800">Product Description:</span>
-                        <p className="text-gray-600 text-md break-words mt-2">{product.description}</p>
+                        <span className="text-xl font-bold">Product Description:</span>
+                        <p className="text-gray-800 text-md break-words mt-4">{product.description}</p>
                     </div>
-                    <div className="flex -mx-2 mb-4 mt-20 gap-12">
+                    <div className="flex -mx-2 mb-4 mt-20 gap-12 justify-center">
                         <div className="flex items-center">
                             <button onClick={decreaseQuantity} className="btn_dark_green rounded-l-full px-4">
                                 -

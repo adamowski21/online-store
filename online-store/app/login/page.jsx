@@ -1,35 +1,56 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import Link from "next/link"
+import InputField from '@/components/InputField'
 
 const page = () => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = (e) => {
+    e.preventDefault();
+    let tempErrors = {};
+
+    if (!email) tempErrors.email = 'Email is required';
+    if (!password) {
+      tempErrors.password = 'Password is required';
+    } else {
+      if (!/[A-Z]/.test(password)) {
+        tempErrors.password = 'Password must contain at least one uppercase letter';
+      }
+      if (!/[!@#$%^&*]/.test(password)) {
+        tempErrors.password = 'Password must contain at least one special character';
+      }
+      if (password.length < 8) {
+        tempErrors.password = 'Password must be at least 8 characters long';
+      }
+    }
+
+    setErrors(tempErrors);
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
-      <div className="w-full p-6 bg-white rounded-md shadow-md lg:max-w-xl">
-          <img src="supp-logo.png" alt="logo" class="mx-auto w-48 h-48"></img>
+      <div className="w-full p-6 shadow-border rounded-lg lg:max-w-xl">
+        <img src="supp-logo.png" alt="logo" className="mx-auto w-48 h-48"></img>
         <h1 className="text-3xl font-bold text-center text-gray-56 m-10">Log in</h1>
-        <form className="mt-6">
+        <form className="mt-6" onSubmit={validateForm}>
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-bold text-gray-56"
-            >
-              Email
-            </label>
-            <input
+            <InputField
+              label="Email"
               type="email"
-              className="block w-full px-4 py-2 mt-2 text-gray-56 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
             />
-          </div>
-          <div className="mb-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-bold text-gray-56"
-            >
-              Password
-            </label>
-            <input
+            <InputField
+              label="Password"
               type="password"
-              className="block w-full px-4 py-2 mt-2 text-gray-56 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={errors.password}
             />
           </div>
           <div className="mt-6">
