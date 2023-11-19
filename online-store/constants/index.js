@@ -1,7 +1,7 @@
 export const NAV_LINKS = [
     { href: '/', key: 'home', label: 'Home' },
-    { href: '/', key: 'about', label: 'About Us' },
-    { href: '/', key: 'contact', label: 'Contact Us' },
+    { href: '/about', key: 'about', label: 'About Us' },
+    { href: '/contact', key: 'contact', label: 'Contact Us' },
 ];
   
   export const FOOTER_CONTACT_INFO = {
