@@ -1,6 +1,9 @@
 const categories = [
     { id: 1, name: 'Creatine' },
     { id: 2, name: 'Protein' },
+    { id: 3, name: 'Pre-workout' },
+    { id: 4, name: 'Vitamins' },
+    { id: 5, name: 'Equipment' },
 ];
 
 const products = [
@@ -23,7 +26,7 @@ const products = [
     {
       id: 3,
       name: 'KFD Premium X-Whey Wafelkowy',
-      categories: ['protein', 'new-arrivals'],
+      categories: ['protein'],
       description: 'Product description here.',
       price: 119.99,
       image: '/products/kfd-premium-x-whey.jpg',

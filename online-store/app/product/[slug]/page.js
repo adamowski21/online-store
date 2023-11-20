@@ -6,7 +6,7 @@ const ProductDetails = ({ params }) => {
     const { slug } = params
 
     const product = products.find((p) => getSlug(p.name) === slug) // todo: backend (baza danych)
-    console.log(products.map(p=>getSlug(p.name)))
+    //console.log(products.map(p=>getSlug(p.name)))
 
     if (!product) {
         return <div>Product not found</div>
