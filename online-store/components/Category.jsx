@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { products } from '../../data/mockData';
-import ProductCard from '../../components/ProductCard';
+import { products } from '../data/mockData';
+import ProductCard from '../components/ProductCard';
 
-const Page = () => {
+const CategoryPage = ({ category }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const creatineProducts = products.filter((product) =>
-        product.categories.includes('creatine') && product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const categoryProducts = products.filter((product) => 
+        product.categories.includes(category.name.toLowerCase()) && product.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+);
 
     return (
         <section>
@@ -25,7 +25,7 @@ const Page = () => {
                 </div>
             </div>
             <div className="category-products max-w-1/2">
-                {creatineProducts.map((product) => (
+                {categoryProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>
@@ -33,4 +33,4 @@ const Page = () => {
     );
 };
 
-export default Page;
+export default CategoryPage;

@@ -1,9 +1,9 @@
 const categories = [
-    { id: 1, name: 'Creatine' },
-    { id: 2, name: 'Protein' },
-    { id: 3, name: 'Pre-workout' },
-    { id: 4, name: 'Vitamins' },
-    { id: 5, name: 'Equipment' },
+    { id: 1, name: 'Creatine', image: '/creatine.png', title: 'Muscle Build' },
+    { id: 2, name: 'Protein', image: '/protein.jpg', title: 'Muscle Recovery' },
+    { id: 3, name: 'Pre-workout', image: '/pre-workout.jpeg', title: 'Pre-workout' },
+    { id: 4, name: 'Vitamins', image: '/vitamins.jpg', title: 'Immune Boost' },
+    { id: 5, name: 'Equipment', image: '/equipment.jpg', title: 'Gym Equipment' },
 ];
 
 const products = [
