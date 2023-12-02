@@ -8,7 +8,7 @@ const Dialog = ({ isOpen, children, onClose }) => {
     }
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-10">
+        <div className="fixed inset-0 flex items-center justify-center z-10 backdrop-blur-md">
             <div className="bg-white p-10 rounded-2xl border border-gray-300 w-1/3">
                 <div className="flex justify-between items-center mb-10">
                     <h2 className="text-3xl font-semibold">Edit your email</h2>

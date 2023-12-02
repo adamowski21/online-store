@@ -10,7 +10,7 @@ const page = () => {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [errors, setErrors] = useState({});
 
-  const validateForm = (e) => {
+  const validateForm = async (e) => {
     e.preventDefault();
     let tempErrors = {};
 
@@ -33,6 +33,31 @@ const page = () => {
     }
 
     setErrors(tempErrors);
+
+    if (Object.keys(tempErrors).length === 0) {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.text();
+
+      if (response.ok) {
+        console.log(data);
+        alert('Registration was successful');
+        window.location.href = '/login';
+      } else {
+        console.error(data);
+        alert('Registration failed: ' + data);
+      }
+
+    }
   };
 
   return (

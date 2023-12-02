@@ -2,38 +2,68 @@
 import React, { useState, useEffect } from 'react'
 import Dialog from '@/components/Dialog'
 import InputField from '@/components/InputField'
-
+import { users } from '@/data/mockData'
 
 const UserPage = () => {
 
-    const [isDialogOpen, setDialogOpen] = useState(false);
+    const [isEmailDialogOpen, setEmailDialogOpen] = useState(false);
+    const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
 
-    const [currentEmail, setCurrentEmail] = useState('');
+    const [currentEmail, setCurrentEmail] = useState(users[0].email);
     const [newEmail, setNewEmail] = useState('');
     const [repeatNewEmail, setRepeatNewEmail] = useState('');
-    const [errors, setErrors] = useState({});
+    const [emailErrors, setEmailErrors] = useState({});
 
     const handleCurrentEmailChange = (e) => setCurrentEmail(e.target.value);
     const handleNewEmailChange = (e) => setNewEmail(e.target.value);
     const handleRepeatNewEmailChange = (e) => setRepeatNewEmail(e.target.value);
 
+    const [currentPassword, setCurrentPassword] = useState(users[0].password);
+    const [newPassword, setNewPassword] = useState('');
+    const [repeatNewPassword, setRepeatNewPassword] = useState('');
+    const [passwordErrors, setPasswordErrors] = useState({});
+
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
+    const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+    const handleRepeatNewPasswordChange = (e) => setRepeatNewPassword(e.target.value);
+
+
     useEffect(() => {
         let tempErrors = {};
 
-        if (!newEmail) tempErrors.newEmail = 'New Email is required';
-        else if (!/\S+@\S+\.\S+/.test(newEmail)) tempErrors.newEmail = 'Email is not valid';
-        if (newEmail !== repeatNewEmail) tempErrors.repeatNewEmail = 'New Email and Repeat New Email must match';
+        if (!newEmail) tempErrors.newEmail = 'Email is required';
+        if (!/\S+@\S+\.\S+/.test(newEmail)) tempErrors.newEmail = 'Email is not valid';
+        if (newEmail !== repeatNewEmail) tempErrors.repeatNewEmail = 'Emails must match';
 
-        setErrors(tempErrors);
+        setEmailErrors(tempErrors);
     }, [newEmail, repeatNewEmail]);
 
-    const isFormValid = Object.keys(errors).length === 0 && newEmail && repeatNewEmail && newEmail === repeatNewEmail;
+    const isEmailFormValid = Object.keys(emailErrors).length === 0 && newEmail && repeatNewEmail && newEmail === repeatNewEmail;
 
-    const handleSubmit = (e) => {
+    const handleEmailSubmit = (e) => {
         e.preventDefault();
-        if (isFormValid) {
+        if (isEmailFormValid) {
             // Perform some action when the form is submitted
             console.log('Form submitted:', newEmail);
+        }
+    };
+
+    useEffect(() => {
+        let tempPasswordErrors = {};
+
+        if (newPassword.length < 8) tempPasswordErrors.newPassword = 'Password must be at least 8 characters';
+        if (newPassword !== repeatNewPassword) tempPasswordErrors.repeatNewPassword = 'Passwords must match';
+
+        setPasswordErrors(tempPasswordErrors);
+    }, [newPassword, repeatNewPassword]);
+
+    const isPasswordFormValid = Object.keys(passwordErrors).length === 0 && newPassword && repeatNewPassword && newPassword === repeatNewPassword;
+
+    const handlePasswordSubmit = (e) => {
+        e.preventDefault();
+        if (isPasswordFormValid) {
+            // Perform some action when the form is submitted
+            console.log('Password form submitted:', newPassword);
         }
     };
 
@@ -47,41 +77,40 @@ const UserPage = () => {
                         <label className="text-sm">Email:</label>
                     </div>
                     <div>
-                        <input type="email" name="email" className="border border-black rounded-lg p-3 w-full" />
+                        <input type="email" name="email" value={currentEmail} readOnly className="border border-black rounded-lg p-3 w-full" />
                     </div>
                     <div className="w-full flex justify-end">
-                        <button type="button" className="underline text-sm" onClick={() => setDialogOpen(true)}>
+                        <button type="button" className="underline text-sm" onClick={() => setEmailDialogOpen(true)}>
                             Edit
                         </button>
                     </div>
-                    <Dialog isOpen={isDialogOpen} onClose={() => setDialogOpen(false)}>
-                        <form onSubmit={handleSubmit}>
+                    <Dialog isOpen={isEmailDialogOpen} onClose={() => setEmailDialogOpen(false)}>
+                        <form onSubmit={handleEmailSubmit}>
                             <InputField
                                 label="Current Email"
                                 type="email"
                                 value={currentEmail}
-                                onChange={handleCurrentEmailChange}
-                                error={errors.currentEmail}
+                                readOnly
                             />
                             <InputField
                                 label="New Email"
                                 type="email"
                                 value={newEmail}
                                 onChange={handleNewEmailChange}
-                                error={errors.newEmail}
+                                error={emailErrors.newEmail}
                             />
                             <InputField
                                 label="Repeat New Email"
                                 type="email"
                                 value={repeatNewEmail}
                                 onChange={handleRepeatNewEmailChange}
-                                error={errors.repeatNewEmail}
+                                error={emailErrors.repeatNewEmail}
                             />
                             <div className="flex justify-end mt-6">
                                 <button
                                     type="submit"
-                                    className={`border rounded-full px-4 ${isFormValid ? 'bg-black text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
-                                    disabled={!isFormValid}
+                                    className={`border rounded-full px-4 ${isEmailFormValid ? 'bg-black text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                    disabled={!isEmailFormValid}
                                 >
                                     Submit
                                 </button>
@@ -94,13 +123,46 @@ const UserPage = () => {
                         <label className="text-sm">Password:</label>
                     </div>
                     <div>
-                        <input type="password" name="password" className="border border-black rounded-lg p-3 w-full" />
+                        <input type="password" name="password" value={currentPassword} readOnly className="border border-black rounded-lg p-3 w-full" />
                     </div>
                     <div className="w-full flex justify-end">
-                        <button className="underline text-sm">
+                        <button type="button" className="underline text-sm" onClick={() => setPasswordDialogOpen(true)}>
                             Edit
                         </button>
                     </div>
+                    <Dialog isOpen={isPasswordDialogOpen} onClose={() => setPasswordDialogOpen(false)}>
+                        <form onSubmit={handlePasswordSubmit}>
+                            <InputField
+                                label="Current Password"
+                                type="password"
+                                value={currentPassword}
+                                readOnly
+                            />
+                            <InputField
+                                label="New Password"
+                                type="password"
+                                value={newPassword}
+                                onChange={handleNewPasswordChange}
+                                error={passwordErrors.newPassword}
+                            />
+                            <InputField
+                                label="Repeat New Password"
+                                type="password"
+                                value={repeatNewPassword}
+                                onChange={handleRepeatNewPasswordChange}
+                                error={passwordErrors.repeatNewPassword}
+                            />
+                            <div className="flex justify-end mt-6">
+                                <button
+                                    type="submit"
+                                    className={`border rounded-full px-4 ${isPasswordFormValid ? 'bg-black text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                    disabled={!isPasswordFormValid}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </Dialog>
                 </div>
                 <div className="flex justify-between items-center border-t border-b p-6">
                     <div className="mr-10">

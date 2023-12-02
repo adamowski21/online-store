@@ -41,4 +41,12 @@ const products = [
     },
   ];
 
-export { categories, products};
+  const users = [
+    {
+      id: 1,
+      email: 'user@example.com',
+      password: 'Password123!',
+    },
+  ];
+
+export { categories, products, users};

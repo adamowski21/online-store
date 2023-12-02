@@ -1,15 +1,20 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Link from "next/link"
 import InputField from '@/components/InputField'
+import { useRouter } from 'next/navigation'
+import { NavigationContext } from '@/components/NavigationContext'
 
 const page = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const { token, setToken } = useContext(NavigationContext);
 
-  const validateForm = (e) => {
+  const router = useRouter();
+
+  const validateForm = async (e) => {
     e.preventDefault();
     let tempErrors = {};
 
@@ -29,6 +34,36 @@ const page = () => {
     }
 
     setErrors(tempErrors);
+
+    if (Object.keys(tempErrors).length === 0) {
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
+
+        if (response.ok) {
+          const token = await response.text();
+
+          localStorage.setItem('authToken', token);
+          setToken(token);
+
+          console.log('Login successful:', token);
+          router.push('/');
+        } else {
+          const errorData = await response.text();
+          console.error('Login failed:', errorData);
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+      }
+    }
   };
 
   return (

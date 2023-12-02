@@ -48,7 +48,19 @@ module.exports = {
       borderRadius: {
         '5xl': '40px',
       },
+      backdropFilter: {
+        'none': 'none',
+        'blur': 'blur(20px)',
+      },
     },
   },
-  plugins: [],
+  variants: {
+    extend: {
+      backdropFilter: ['responsive'], // or other variants you need
+    },
+  },
+  plugins: [
+    require('@tailwindcss/postcss7-compat'),
+    require('tailwindcss-filters'),
+  ],
 };
