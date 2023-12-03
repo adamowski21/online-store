@@ -1,10 +1,14 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Dialog from '@/components/Dialog'
 import InputField from '@/components/InputField'
 import { users } from '@/data/mockData'
+import { NavigationContext } from '@/components/NavigationContext'
+
 
 const UserPage = () => {
+
+    const { token, setToken } = useContext(NavigationContext);
 
     const [isEmailDialogOpen, setEmailDialogOpen] = useState(false);
     const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
@@ -29,10 +33,44 @@ const UserPage = () => {
 
     const isEmailFormValid = Object.keys(emailErrors).length === 0 && newEmail && repeatNewEmail && newEmail === repeatNewEmail;
 
-    const handleEmailSubmit = (e) => {
+    const handleEmailSubmit = async (e) => {
         e.preventDefault();
-        if (isEmailFormValid) {
-            console.log('Form submitted:', newEmail);
+
+        if (newEmail !== repeatNewEmail) {
+            setEmailErrors({
+                ...emailErrors,
+                repeatNewEmail: 'The new emails do not match',
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/users/userDetails', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token.accessToken}`
+                },
+                body: JSON.stringify({
+                    email: newEmail,
+                }),
+            });
+
+            if (response.ok) {
+                setUser({
+                    ...user,
+                    email: newEmail,
+                });
+                setEmailDialogOpen(false);
+            } else {
+                const errorData = await response.text();
+                setEmailErrors({
+                    ...emailErrors,
+                    newEmail: errorData.error,
+                });
+            }
+        } catch (error) {
+            console.error('Update email error:', error);
         }
     };
 
@@ -67,25 +105,24 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const authToken = JSON.parse(localStorage.getItem('authToken'));
-                console.log('authToken:', authToken);
-        
-                if (!authToken || !authToken.accessToken) {
+                console.log('authToken:', token.accessToken);
+
+                if (!token) {
                     console.error('No authToken found in localStorage');
                     return;
                 }
-        
+
                 const response = await fetch('http://localhost:8080/api/users/userDetails', {
                     headers: {
-                        'Authorization': `Bearer ${authToken.accessToken}`
+                        'Authorization': `Bearer ${token.accessToken}`
                     }
                 });
-        
+
                 if (!response.ok) {
                     console.error('Failed to fetch user:', response.status);
                     return;
                 }
-        
+
                 const fetchedUser = await response.json();
                 setUser({ email: fetchedUser.email });
             } catch (error) {
@@ -93,8 +130,11 @@ const UserPage = () => {
             }
         };
 
-        fetchUser();
-    }, []);
+        if (token) {
+            fetchUser();
+        }
+
+    }, [token]);
 
     return (
         <div className="flex flex-col items-center justify-center m-10 text-lg">
@@ -112,7 +152,7 @@ const UserPage = () => {
                             Edit
                         </button>
                     </div>
-                    <Dialog isOpen={isEmailDialogOpen} onClose={() => setEmailDialogOpen(false)}>
+                    <Dialog isOpen={isEmailDialogOpen} onClose={() => setEmailDialogOpen(false)} title="Edit your email">
                         <form onSubmit={handleEmailSubmit}>
                             <InputField
                                 label="Current Email"
@@ -158,7 +198,7 @@ const UserPage = () => {
                             Edit
                         </button>
                     </div>
-                    <Dialog isOpen={isPasswordDialogOpen} onClose={() => setPasswordDialogOpen(false)}>
+                    <Dialog isOpen={isPasswordDialogOpen} onClose={() => setPasswordDialogOpen(false)} title="Edit your email">
                         <form onSubmit={handlePasswordSubmit}>
                             <InputField
                                 label="Current Password"

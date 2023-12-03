@@ -8,7 +8,7 @@ export const NavigationProvider = ({ children }) => {
 
     useEffect(() => {
         const authToken = localStorage.getItem('authToken');
-        setToken(authToken);
+        setToken(JSON.parse(authToken));
     },[]);
 
     return (

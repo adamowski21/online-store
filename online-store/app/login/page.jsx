@@ -58,7 +58,12 @@ const page = () => {
           router.push('/');
         } else {
           const errorData = await response.text();
-          console.error('Login failed:', errorData);
+
+          if (errorData.includes('Email is already used')) {
+            setErrors({ email: 'This email is already in use' });
+          } else {
+            console.error('Login failed:', errorData);
+          }
         }
       } catch (error) {
         console.error('Login error:', error);

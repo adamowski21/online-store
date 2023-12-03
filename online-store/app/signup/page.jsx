@@ -54,6 +54,9 @@ const page = () => {
         window.location.href = '/login';
       } else {
         console.error(data);
+        if (data.includes('Email is already used')) {
+          setErrors({ email: 'Email is already in use' })
+        }
         alert('Registration failed: ' + data);
       }
 
