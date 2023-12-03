@@ -14,19 +14,8 @@ const UserPage = () => {
     const [repeatNewEmail, setRepeatNewEmail] = useState('');
     const [emailErrors, setEmailErrors] = useState({});
 
-    const handleCurrentEmailChange = (e) => setCurrentEmail(e.target.value);
     const handleNewEmailChange = (e) => setNewEmail(e.target.value);
     const handleRepeatNewEmailChange = (e) => setRepeatNewEmail(e.target.value);
-
-    const [currentPassword, setCurrentPassword] = useState(users[0].password);
-    const [newPassword, setNewPassword] = useState('');
-    const [repeatNewPassword, setRepeatNewPassword] = useState('');
-    const [passwordErrors, setPasswordErrors] = useState({});
-
-    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
-    const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleRepeatNewPasswordChange = (e) => setRepeatNewPassword(e.target.value);
-
 
     useEffect(() => {
         let tempErrors = {};
@@ -43,10 +32,17 @@ const UserPage = () => {
     const handleEmailSubmit = (e) => {
         e.preventDefault();
         if (isEmailFormValid) {
-            // Perform some action when the form is submitted
             console.log('Form submitted:', newEmail);
         }
     };
+
+    const [currentPassword, setCurrentPassword] = useState(users[0].password);
+    const [newPassword, setNewPassword] = useState('');
+    const [repeatNewPassword, setRepeatNewPassword] = useState('');
+    const [passwordErrors, setPasswordErrors] = useState({});
+
+    const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+    const handleRepeatNewPasswordChange = (e) => setRepeatNewPassword(e.target.value);
 
     useEffect(() => {
         let tempPasswordErrors = {};
@@ -62,22 +58,54 @@ const UserPage = () => {
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
         if (isPasswordFormValid) {
-            // Perform some action when the form is submitted
             console.log('Password form submitted:', newPassword);
         }
     };
 
+    const [user, setUser] = useState({ email: '' });
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const authToken = JSON.parse(localStorage.getItem('authToken'));
+                console.log('authToken:', authToken);
+        
+                if (!authToken || !authToken.accessToken) {
+                    console.error('No authToken found in localStorage');
+                    return;
+                }
+        
+                const response = await fetch('http://localhost:8080/api/users/userDetails', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken.accessToken}`
+                    }
+                });
+        
+                if (!response.ok) {
+                    console.error('Failed to fetch user:', response.status);
+                    return;
+                }
+        
+                const fetchedUser = await response.json();
+                setUser({ email: fetchedUser.email });
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     return (
         <div className="flex flex-col items-center justify-center m-10 text-lg">
             <h1 className="text-4xl font-semibold text-center mb-10">Account details</h1>
-            <form className="space-y-6">
+            <div className="space-y-6">
                 <div>
                     <div>
                         <label className="text-sm">Email:</label>
                     </div>
                     <div>
-                        <input type="email" name="email" value={currentEmail} readOnly className="border border-black rounded-lg p-3 w-full" />
+                        <input type="email" name="email" value={user.email} readOnly className="border border-black rounded-lg p-3 w-full" />
                     </div>
                     <div className="w-full flex justify-end">
                         <button type="button" className="underline text-sm" onClick={() => setEmailDialogOpen(true)}>
@@ -89,7 +117,7 @@ const UserPage = () => {
                             <InputField
                                 label="Current Email"
                                 type="email"
-                                value={currentEmail}
+                                value={user.email}
                                 readOnly
                             />
                             <InputField
@@ -177,7 +205,7 @@ const UserPage = () => {
                         Save
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     )
 }

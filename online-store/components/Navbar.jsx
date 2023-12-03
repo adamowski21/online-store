@@ -33,7 +33,7 @@ const Navbar = () => {
                     </Link>
                 ))}
             </ul>
-            <div className="lg:flexCenter hidden gap-16">
+            <div className="lg:flexCenter hidden gap-28">
                 {token ? (
                     <>
                         <Link href="/cart">
