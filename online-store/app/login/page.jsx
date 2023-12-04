@@ -52,7 +52,7 @@ const page = () => {
           const token = await response.text();
 
           localStorage.setItem('authToken', token);
-          setToken(token);
+          setToken(JSON.parse(token));
 
           console.log('Login successful:', token);
           router.push('/');
