@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import Image from 'next/image';
 import InputField from '@/components/InputField';
 import InputFieldWithCounter from '@/components/InputFieldWithCounter';
@@ -46,6 +46,8 @@ const AdminPage = () => {
   const [products, setProducts] = useState([]);
 
   const [users, setUsers] = useState([]);
+
+  const inputImageRef = useRef();
 
   const resetForm = () => {
     setId("");
@@ -141,22 +143,18 @@ const AdminPage = () => {
       return;
     }
 
-    const product = {
-      id,
-      categoryId,
-      name,
-      description,
-      price,
-      //image,
-    };
+    const data = new FormData();
+    data.set('name', name);
+    data.set('description', description);
+    data.set('categoryId', categoryId);
+    data.set('image', inputImageRef.current.files[0]);
 
     const response = await fetch('http://localhost:8080/api/products', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token.accessToken}`,
       },
-      body: JSON.stringify(product),
+      body: data,
     });
 
     if (response.ok) {
@@ -214,7 +212,6 @@ const AdminPage = () => {
       name,
       description,
       price,
-      //image,
     };
 
     const response = await fetch(`http://localhost:8080/api/products/${id}`, {
@@ -325,7 +322,7 @@ const AdminPage = () => {
             <InputField label="Product Name" value={name} onChange={e => setName(e.target.value)} error={nameError} />
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />
-            {/* <InputField label="Image" value={image} onChange={e => setImage(e.target.value)} /> */}
+            <input type="file" ref={inputImageRef}></input>
             <div className="flex justify-center mb-2">
               <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded">
                 Submit
@@ -369,7 +366,7 @@ const AdminPage = () => {
             <InputField label="Product Name" value={name} onChange={e => setName(e.target.value)} error={nameError} />
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />
-            {/* <InputField label="Image" value={image} onChange={e => setImage(e.target.value)} /> */}
+            {/* <InputField label="Image" value={image} onChange={e => setImage(e.target.files[0])} /> */}
             <div className="flex justify-center mb-2">
               <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded">
                 Submit
