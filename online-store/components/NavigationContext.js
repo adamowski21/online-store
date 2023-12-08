@@ -11,8 +11,14 @@ export const NavigationProvider = ({ children }) => {
         setToken(JSON.parse(authToken));
     },[]);
 
+    const logout = () => {
+        localStorage.removeItem('authToken');
+        setToken(null);
+        window.location.href = '/login';
+    }
+
     return (
-        <NavigationContext.Provider value={{ token, setToken }}>
+        <NavigationContext.Provider value={{ token, setToken, logout }}>
             {children}
         </NavigationContext.Provider>
     );

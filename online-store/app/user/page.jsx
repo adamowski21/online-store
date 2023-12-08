@@ -8,7 +8,7 @@ import { NavigationContext } from '@/components/NavigationContext'
 
 const UserPage = () => {
 
-    const { token, setToken } = useContext(NavigationContext);
+    const { token, setToken, logout } = useContext(NavigationContext);
 
     const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
     const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
@@ -20,6 +20,7 @@ const UserPage = () => {
 
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
     const handleRepeatNewPasswordChange = (e) => setRepeatNewPassword(e.target.value);
+
 
     useEffect(() => {
         let tempPasswordErrors = {};
@@ -57,6 +58,7 @@ const UserPage = () => {
                 if (response.ok) {
                     setPasswordDialogOpen(false);
                     resetPasswordFields();
+                    logout();
                 } else {
                     const errorData = await response.text();
                     setPasswordErrors({
@@ -113,16 +115,19 @@ const UserPage = () => {
 
     const handleDeleteAccount = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/users/deleteAccount', {
+            console.log('Bearer Token:', token.accessToken);
+            const response = await fetch('http://localhost:8080/api/users', {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${token.accessToken}`,
-                },
+                    'Authorization': `Bearer ${token.accessToken}`
+                }
             });
+            console.log('Delete account response:', response);
 
             if (response.ok) {
                 console.log('Account deleted successfully');
                 setDeleteConfirmationOpen(false);
+                logout();
             } else {
                 console.error('Error deleting account:', response.status);
                 setDeleteConfirmationOpen(false);
