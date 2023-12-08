@@ -32,7 +32,6 @@ const AdminPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  //const [image, setImage] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [id, setId] = useState("");
 
@@ -49,13 +48,19 @@ const AdminPage = () => {
 
   const inputImageRef = useRef();
 
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleBackToProducts = () => {
+    setIsProductToEditSelected(false);
+    setIsEditProductOpen(true);
+  }
+
   const resetForm = () => {
     setId("");
     setCategoryId("");
     setName("");
     setDescription("");
     setPrice("");
-    //setImage("");
   };
 
   const displayMessage = (msg) => {
@@ -147,7 +152,7 @@ const AdminPage = () => {
     data.set('name', name);
     data.set('description', description);
     data.set('categoryId', categoryId);
-    data.set('image', inputImageRef.current.files[0]);
+    data.set('file', inputImageRef.current.files[0]);
 
     const response = await fetch('http://localhost:8080/api/products', {
       method: 'POST',
@@ -156,6 +161,9 @@ const AdminPage = () => {
       },
       body: data,
     });
+
+    const responseData = await response.json();
+    console.log(responseData);
 
     if (response.ok) {
       resetForm();
@@ -206,21 +214,19 @@ const AdminPage = () => {
       return;
     }
 
-    const product = {
-      id,
-      categoryId,
-      name,
-      description,
-      price,
-    };
+    const data = new FormData();
+    data.set('categoryId', categoryId);
+    data.set('name', name);
+    data.set('description', description);
+    data.set('price', price);
+    data.set('file', inputImageRef.current.files[0]);
 
     const response = await fetch(`http://localhost:8080/api/products/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token.accessToken}`,
       },
-      body: JSON.stringify(product),
+      body: data,
     });
 
     if (response.ok) {
@@ -309,7 +315,7 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="flex justify-center space-x-10">
+    <div className="flex justify-center space-x-10 mt-5">
       <div className="flex flex-col items-center w-1/2">
         <h2 className="flex items-center text-2xl mb-4 group">
           <Image src="/product-icon.svg" alt="product" width={32} height={32} className="mr-2" />
@@ -322,7 +328,8 @@ const AdminPage = () => {
             <InputField label="Product Name" value={name} onChange={e => setName(e.target.value)} error={nameError} />
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />
-            <input type="file" ref={inputImageRef}></input>
+            <input type="file" ref={inputImageRef} onChange={e => setSelectedImage(URL.createObjectURL(e.target.files[0]))} />
+            {selectedImage && <img src={selectedImage} alt="productImage" width="100" height="100" className="border border-gray-300 rounded mt-4" />}
             <div className="flex justify-center mb-2">
               <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded">
                 Submit
@@ -339,6 +346,7 @@ const AdminPage = () => {
                 console.log(product);
                 return (
                   <div key={product.name} className="p-4 border rounded shadow flex flex-col">
+                    <img src={product.fileName} alt={product.name} className="w-32 h-32 object-cover mb-4" />
                     <div>
                       <h3 className="text-xl font-bold mb-2">{product.name}</h3>
                       <p className="text-gray-700 mb-1">Category ID: {product.categoryId}</p>
@@ -349,8 +357,7 @@ const AdminPage = () => {
                       <button onClick={() => handleEditProduct(product.name)} className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">
                         Edit
                       </button>
-                      <button onClick={() => { setProductIdToDelete(product.id); handleDeleteConfirmation(); }} className="flex items-center justify-center py-2 px-2 bg-red-600 rounded focus:outline-none hover:font-bold group flex-shrink-0"
-                      >
+                      <button onClick={() => { setProductIdToDelete(product.id); handleDeleteConfirmation(); }} className="flex items-center justify-center py-2 px-2 bg-red-600 rounded focus:outline-none hover:font-bold group flex-shrink-0">
                         <Image src="/delete-icon.svg" alt="delete" width={24} height={24} className="transform group-hover:scale-110" />
                       </button>
                     </div>
@@ -361,14 +368,19 @@ const AdminPage = () => {
           )}
         </div>
         {isProductToEditSelected && (
-          <form onSubmit={handleEditSubmit}>
+          <form onSubmit={handleEditSubmit} className="p-4 rounded-2xl shadow-border mt-4 mb-4">
+            <div className="flex">
+              <button type="button" onClick={handleBackToProducts} className=" ml-auto px-2 py-1 mb-4 tracking-wide text-white text-sm transition-colors duration-200 transform bg-black rounded hover:bg-[#383838]">
+                Back
+              </button>
+            </div>
             <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} />
             <InputField label="Product Name" value={name} onChange={e => setName(e.target.value)} error={nameError} />
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />
-            {/* <InputField label="Image" value={image} onChange={e => setImage(e.target.files[0])} /> */}
+            <input type="file" ref={inputImageRef}></input>
             <div className="flex justify-center mb-2">
-              <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded">
+              <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded mt-4">
                 Submit
               </button>
             </div>
