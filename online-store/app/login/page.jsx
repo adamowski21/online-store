@@ -75,7 +75,7 @@ const page = () => {
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
       <div className="w-full p-6 shadow-border rounded-lg lg:max-w-xl">
         <img src="supp-logo.png" alt="logo" className="mx-auto w-48 h-48"></img>
-        <h1 className="text-3xl font-bold text-center text-gray-56 m-10">Log in</h1>
+        <h1 className="text-3xl font-bold text-center text-gray-56">Log in</h1>
         <form className="mt-6" onSubmit={validateForm}>
           <div className="mb-4">
             <InputField
