@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import InputField from '@/components/InputField';
 import InputFieldWithCounter from '@/components/InputFieldWithCounter';
@@ -149,9 +149,10 @@ const AdminPage = () => {
     }
 
     const data = new FormData();
+    data.set('categoryId', categoryId);
     data.set('name', name);
     data.set('description', description);
-    data.set('categoryId', categoryId);
+    data.set('price', price);
     data.set('file', inputImageRef.current.files[0]);
 
     const response = await fetch('http://localhost:8080/api/products', {
@@ -200,6 +201,7 @@ const AdminPage = () => {
     setName(productToEdit.name);
     setDescription(productToEdit.description);
     setPrice(productToEdit.price);
+    setSelectedImage(productToEdit.fileName);
 
     setIsProductToEditSelected(true);
 
@@ -314,6 +316,46 @@ const AdminPage = () => {
     }
   };
 
+  const [imageUrls, setImageUrls] = useState({});
+
+  const getImage = async (fileName) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/products/image/${fileName}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token.accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      return url;
+    } catch (error) {
+      console.error('Error fetching image:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const urls = {};
+
+      for (const product of products) {
+        const url = await getImage(product.fileName);
+        urls[product.fileName] = url;
+      }
+
+      setImageUrls(urls);
+    };
+
+    fetchImages();
+  }, [products]);
+
   return (
     <div className="flex justify-center space-x-10 mt-5">
       <div className="flex flex-col items-center w-1/2">
@@ -346,9 +388,11 @@ const AdminPage = () => {
                 console.log(product);
                 return (
                   <div key={product.name} className="p-4 border rounded shadow flex flex-col">
-                    <img src={product.fileName} alt={product.name} className="w-32 h-32 object-cover mb-4" />
                     <div>
                       <h3 className="text-xl font-bold mb-2">{product.name}</h3>
+                      {imageUrls[product.fileName] && (
+                        <img src={imageUrls[product.fileName]} alt={product.name} className="w-32 h-32 object-cover mb-4" />
+                      )}
                       <p className="text-gray-700 mb-1">Category ID: {product.categoryId}</p>
                       <p className="text-gray-700 mb-1">Description: {product.description}</p>
                       <p className="text-gray-700 mb-2">Price: {product.price} zł</p>
@@ -418,7 +462,6 @@ const AdminPage = () => {
                   <Image src="/delete-icon.svg" alt="delete" width={24} height={24} className="transform group-hover:scale-110" />
                 </button>
               </div>
-
             </div>
           ))}
         </div>
