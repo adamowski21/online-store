@@ -40,7 +40,10 @@ const AdminPage = () => {
   const [priceError, setPriceError] = useState("");
   const [categoryIdError, setCategoryIdError] = useState("");
 
-  const [message, setMessage] = useState("");
+  const [addProductMessage, setAddProductMessage] = useState("");
+  const [editProductMessage, setEditProductMessage] = useState("");
+
+  const [isGetAllUsersOpen, setIsGetAllUsersOpen] = useState(false);
 
   const [products, setProducts] = useState([]);
 
@@ -61,12 +64,16 @@ const AdminPage = () => {
     setName("");
     setDescription("");
     setPrice("");
+    if (inputImageRef.current) {
+      inputImageRef.current.value = "";
+    }
+    setSelectedImage(null);
   };
 
-  const displayMessage = (msg) => {
-    setMessage(msg);
+  const displayMessage = (msg, setMessageFunc) => {
+    setMessageFunc(msg);
     setTimeout(() => {
-      setMessage("");
+      setMessageFunc("");
     }, 5000);
   };
 
@@ -168,10 +175,8 @@ const AdminPage = () => {
 
     if (response.ok) {
       resetForm();
-      setMessage("Product added successfully!");
-      setTimeout(() => {
-        setMessage("");
-      }, 5000);
+      setIsAddProductOpen(false);
+      displayMessage("Product added successfully!", setAddProductMessage);
     } else {
       const errorData = await response.text();
       console.error('Error adding product:', errorData);
@@ -201,11 +206,13 @@ const AdminPage = () => {
     setName(productToEdit.name);
     setDescription(productToEdit.description);
     setPrice(productToEdit.price);
-    setSelectedImage(productToEdit.fileName);
+    setSelectedImage(imageUrls[productToEdit.fileName]);
 
     setIsProductToEditSelected(true);
 
     setIsEditProductOpen(false);
+
+    setIsAddProductOpen(false);
 
     console.log(productToEdit);
   };
@@ -221,7 +228,10 @@ const AdminPage = () => {
     data.set('name', name);
     data.set('description', description);
     data.set('price', price);
-    data.set('file', inputImageRef.current.files[0]);
+
+    if (inputImageRef.current && inputImageRef.current.files[0]) {
+      data.set('file', inputImageRef.current.files[0]);
+    }
 
     const response = await fetch(`http://localhost:8080/api/products/${id}`, {
       method: 'PUT',
@@ -233,7 +243,10 @@ const AdminPage = () => {
 
     if (response.ok) {
       resetForm();
-      displayMessage("Product edited successfully!");
+      setIsProductToEditSelected(false);
+      setIsEditProductOpen(true);
+      displayMessage("Product edited successfully!", setEditProductMessage);
+      fetchProducts();
     } else {
       const errorData = await response.text();
       console.error('Error editing product:', errorData);
@@ -264,6 +277,7 @@ const AdminPage = () => {
   };
 
   const handleGetAllUsers = async () => {
+    setIsGetAllUsersOpen(prevIsGetAllUsersOpen => !prevIsGetAllUsersOpen);
     try {
       const response = await fetch('http://localhost:8080/api/users', {
         headers: {
@@ -364,6 +378,7 @@ const AdminPage = () => {
           Products
         </h2>
         <ActionButton iconSrc="/plus-icon.svg" altText="plus" actionText="Add Product" onClick={handleAddProductClick} />
+        {addProductMessage && <p className="text-green-500 text-sm mb-4">{addProductMessage}</p>}
         {isAddProductOpen && (
           <form onSubmit={handleAddSubmit}>
             <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} />
@@ -379,8 +394,8 @@ const AdminPage = () => {
             </div>
           </form>
         )}
-        {message && <p className="text-green-500 text-sm mb-4">{message}</p>}
         <ActionButton iconSrc="/edit-icon.svg" altText="edit" actionText="Edit Product" onClick={handleEditProductClick} />
+        {editProductMessage && <p className="text-green-500 text-sm mb-4">{editProductMessage}</p>}
         <div>
           {isEditProductOpen && (
             <div className="grid grid-cols-3 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-2">
@@ -390,9 +405,11 @@ const AdminPage = () => {
                   <div key={product.name} className="p-4 border rounded shadow flex flex-col">
                     <div>
                       <h3 className="text-xl font-bold mb-2">{product.name}</h3>
-                      {imageUrls[product.fileName] && (
-                        <img src={imageUrls[product.fileName]} alt={product.name} className="w-32 h-32 object-cover mb-4" />
-                      )}
+                      <div className="flex justify-center items-center mt-4 mb-2">
+                        {imageUrls[product.fileName] && (
+                          <img src={imageUrls[product.fileName]} alt={product.name} className="w-32 h-32 object-cover mb-4" />
+                        )}
+                      </div>
                       <p className="text-gray-700 mb-1">Category ID: {product.categoryId}</p>
                       <p className="text-gray-700 mb-1">Description: {product.description}</p>
                       <p className="text-gray-700 mb-2">Price: {product.price} zł</p>
@@ -423,6 +440,7 @@ const AdminPage = () => {
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />
             <input type="file" ref={inputImageRef}></input>
+            {selectedImage && <img src={selectedImage} alt="productImage" width="100" height="100" className="border border-gray-300 rounded mt-4" />}
             <div className="flex justify-center mb-2">
               <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded mt-4">
                 Submit
@@ -451,20 +469,22 @@ const AdminPage = () => {
           Users
         </h2>
         <ActionButton iconSrc="/get-icon.svg" altText="get" actionText="Get All Users" onClick={handleGetAllUsers} />
-        <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4 mb-2">
-          {users.map(user => (
-            <div key={user.id} className="p-4 border rounded shadow">
-              <h3 className="text-xl font-bold mb-2">Email: {user.email}</h3>
-              <p className="text-gray-700 mb-2">Role: {user.roles[0].name}</p>
-              <div className="mt-auto flex justify-end">
-                <button onClick={() => handleDeleteUser(user.id)} className="flex items-center justify-center py-2 px-2 bg-red-600 rounded focus:outline-none hover:font-bold group flex-shrink-0"
-                >
-                  <Image src="/delete-icon.svg" alt="delete" width={24} height={24} className="transform group-hover:scale-110" />
-                </button>
+
+        {isGetAllUsersOpen && (
+          <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4 mb-2">
+            {users.map(user => (
+              <div key={user.id} className="p-4 border rounded shadow">
+                <h3 className="text-xl font-bold mb-2">Email: {user.email}</h3>
+                <p className="text-gray-700 mb-2">Role: {user.roles[0].name}</p>
+                <div className="mt-auto flex justify-end">
+                  <button onClick={() => handleDeleteUser(user.id)} className="flex items-center justify-center py-2 px-2 bg-red-600 rounded focus:outline-none hover:font-bold group flex-shrink-0">
+                    <Image src="/delete-icon.svg" alt="delete" width={24} height={24} className="transform group-hover:scale-110" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
       <Dialog isOpen={isDeleteUserConfirmationOpen} onClose={() => setIsDeleteUserConfirmationOpen(false)} title="Confirm Deletion">
         <div className="text-center">
