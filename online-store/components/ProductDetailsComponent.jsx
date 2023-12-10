@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const ProductDetailsComponent = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
@@ -22,12 +22,7 @@ const ProductDetailsComponent = ({ product }) => {
         <div className="max-w-6xl mx-auto px-4 sm:px-12 lg:px-8 py-20 my-10 shadow-border rounded-3xl">
             <div className="flex flex-col md:flex-row -mx-4">
                 <div className="md:flex-1 px-4 relative min-h-[256px] max-h-[512px]">
-                    <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill={true}
-                        className="object-contain"
-                    />
+                <img src={product.fileName} alt={product.name} className="category-product-img mt-10 w-300 h-300" />
                 </div>
                 <div className="md:flex-1 px-4">
                     <h2 className="text-3xl font-bold mb-2">{product.name}</h2>

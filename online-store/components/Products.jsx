@@ -70,7 +70,7 @@ const Products = () => {
                         <div key={product.id} className="category-product">
                             <div className="category-product-header">
                                 <div className="category-product-img-wrapper normal-img">
-                                    <Link href={`/product/${getSlug(product.name)}`}>
+                                    <Link href={`/product/${product.id}`}>
                                         {imageUrls[product.fileName] && (
                                             <img src={imageUrls[product.fileName]} alt={product.name} className="category-product-img mt-10 w-300 h-300" />
                                         )}
