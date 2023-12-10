@@ -406,9 +406,7 @@ const AdminPage = () => {
                     <div>
                       <h3 className="text-xl font-bold mb-2">{product.name}</h3>
                       <div className="flex justify-center items-center mt-4 mb-2">
-                        {imageUrls[product.fileName] && (
-                          <img src={imageUrls[product.fileName]} alt={product.name} className="w-32 h-32 object-cover mb-4" />
-                        )}
+                          <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="w-32 h-32 object-cover mb-4" />
                       </div>
                       <p className="text-gray-700 mb-1">Category ID: {product.categoryId}</p>
                       <p className="text-gray-700 mb-1">Description: {product.description}</p>

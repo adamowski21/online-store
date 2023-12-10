@@ -24,41 +24,6 @@ const Products = () => {
         fetchProducts();
     }, []);
 
-    const getImage = async (fileName) => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/products/image/${fileName}`);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-
-            return url;
-        } catch (error) {
-            console.error('Error fetching image:', error);
-            return null;
-        }
-    };
-
-    useEffect(() => {
-        const fetchImages = async () => {
-            const urls = {};
-
-            for (const product of products) {
-                const url = await getImage(product.fileName);
-                urls[product.fileName] = url;
-            }
-
-            setImageUrls(urls);
-        };
-
-        if (products.length > 0) {
-            fetchImages();
-        }
-    }, [products]);
-
     return (
         <section id="banner">
             <div className="container">
@@ -71,9 +36,7 @@ const Products = () => {
                             <div className="category-product-header">
                                 <div className="category-product-img-wrapper normal-img">
                                     <Link href={`/product/${product.id}`}>
-                                        {imageUrls[product.fileName] && (
-                                            <img src={imageUrls[product.fileName]} alt={product.name} className="category-product-img mt-10 w-300 h-300" />
-                                        )}
+                                        <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="category-product-img mt-10 w-300 h-300" />
                                     </Link>
                                 </div>
                             </div>

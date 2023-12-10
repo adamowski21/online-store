@@ -1,8 +1,13 @@
 "use client"
-import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { NavigationContext } from '@/components/NavigationContext'
+import { CartContext } from './CartContext';
 
 const ProductDetailsComponent = ({ product }) => {
+
+    const { token, setToken, logout } = useContext(NavigationContext);
+    const { products, cartItems, setCartItems } = useContext(CartContext);
+
     const [quantity, setQuantity] = useState(1);
 
     const decreaseQuantity = () => {
@@ -13,16 +18,62 @@ const ProductDetailsComponent = ({ product }) => {
         setQuantity((prevQuantity) => prevQuantity + 1);
     };
 
-    const handleQuantityChange = (event) => {
-        const newQuantity = parseInt(event.target.value, 10);
-        setQuantity(isNaN(newQuantity) ? 1 : newQuantity);
+    useEffect(() => {
+        const fetchCartItems = async () => {
+          if (!token) {
+            return;
+          }
+    
+          const response = await fetch(`http://localhost:8080/api/cart`, {
+            headers: {
+              'Authorization': `Bearer ${token.accessToken}`,
+            },
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Error fetching cart items`);
+          }
+    
+          const data = await response.json();
+          setCartItems(data);
+        };
+    
+        fetchCartItems();
+      }, [token, setCartItems]);
+
+    const addToCart = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token.accessToken}`,
+                },
+                body: JSON.stringify({
+                    productId: product.id,
+                    quantity,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const message = await response.text();
+            console.log(message);
+
+            setCartItems([...cartItems, { ...product, quantity }]);
+            
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
     };
 
     return (
         <div className="max-w-6xl mx-auto px-4 sm:px-12 lg:px-8 py-20 my-10 shadow-border rounded-3xl">
             <div className="flex flex-col md:flex-row -mx-4">
                 <div className="md:flex-1 px-4 relative min-h-[256px] max-h-[512px]">
-                <img src={product.fileName} alt={product.name} className="category-product-img mt-10 w-300 h-300" />
+                <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="category-product-img mt-10 w-300 h-300" />
                 </div>
                 <div className="md:flex-1 px-4">
                     <h2 className="text-3xl font-bold mb-2">{product.name}</h2>
@@ -43,7 +94,7 @@ const ProductDetailsComponent = ({ product }) => {
                                 +
                             </button>
                         </div>
-                        <button className="btn_dark_green rounded-full inline-flex items-center justify-center font-bold ml-4">
+                        <button onClick={addToCart} className="btn_dark_green rounded-full inline-flex items-center justify-center font-bold ml-4">
                             <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
