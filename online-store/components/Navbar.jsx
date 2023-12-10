@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import React from 'react'
-import logoPng from '@/public/supp-logo.png'
+import logoPng from '@/public/supp-logo.svg'
 import { NavigationContext } from './NavigationContext'
 
 const Navbar = () => {

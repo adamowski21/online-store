@@ -1,6 +1,7 @@
 import { FOOTER_LINKS, FOOTER_CONTACT_INFO, SOCIALS } from '@/constants'
 import Image from 'next/image'
 import Link from 'next/link'
+import logoPng from '@/public/supp-logo-white.svg'
 import React from 'react'
 
 const Footer = () => {
@@ -8,9 +9,9 @@ const Footer = () => {
     <footer className="footer margin">
       <div className="padding-container max-container flex w-full flex-col gap-4">
         <div className="flex flex-col items-center justify-center gap-[10%] md:flex-row">
-          <Link href="/" className="mb-10">
-            <Image src="/supp-logo.png" alt="logo" width={74} height={29} />
-          </Link>
+          {/* <Link href="/" className="mb-10">
+            <Image src={logoPng} alt="logo" width={74} height={29} className="" />
+          </Link> */}
 
           <div className='flex flex-wrap gap-10 sm:justify-between md:flex-1'>
             {FOOTER_LINKS.map((columns) => (
@@ -53,12 +54,16 @@ const Footer = () => {
             </div>
           </div>
         </div>
+        <Link href="/" className="flex justify-center">
+          <Image src={logoPng} alt="logo" width={74} height={29} className="" />
+        </Link>
 
         <div className="bg-gray-20" />
         <p className="regular-14 w-full text-center text-white">2023 SuppStore | All rights reserved</p>
       </div>
     </footer>
-  )}
+  )
+}
 
 const FooterColumn = (props) => {
   const { title, children } = props
@@ -69,6 +74,7 @@ const FooterColumn = (props) => {
       </h4>
       {children}
     </div>
-  )}
+  )
+}
 
 export default Footer

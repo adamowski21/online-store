@@ -3,12 +3,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { CartContext } from '@/components/CartContext';
 import { NavigationContext } from '@/components/NavigationContext'
+import Link from 'next/link';
 
 const CartPage = () => {
 
   const { token, setToken, logout } = useContext(NavigationContext);
-
   const { products, cartItems, setCartItems } = useContext(CartContext);
+
+  const totalPrice = cartItems.reduce((total, item) => total + item.productPrice * item.quantity, 0);
 
   const increaseQuantity = async (id) => {
     const response = await fetch(`http://localhost:8080/api/cart/addOne`, {
@@ -19,12 +21,12 @@ const CartPage = () => {
       },
       body: JSON.stringify({ productId: id }),
     });
-  
+
     if (!response.ok) {
       throw new Error(`Error increasing quantity`);
     }
-  
-    setCartItems(cartItems.map(item => item.id === id ? {...item, quantity: item.quantity + 1} : item));
+
+    setCartItems(cartItems.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
   };
 
   const decreaseQuantity = async (id) => {
@@ -36,19 +38,17 @@ const CartPage = () => {
       },
       body: JSON.stringify({ productId: id }),
     });
-  
+
     if (!response.ok) {
       throw new Error(`Error decreasing quantity`);
     }
-  
-    setCartItems(cartItems.map(item => item.id === id && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item));
-  };
 
-  //const totalPrice = cartItems ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0) : 0;
+    setCartItems(cartItems.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
+  };
 
   useEffect(() => {
     const fetchCartItems = async () => {
-      
+
       if (!token) {
         return;
       }
@@ -58,16 +58,16 @@ const CartPage = () => {
           'Authorization': `Bearer ${token.accessToken}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error fetching cart items`);
       }
-  
+
       const data = await response.json();
-  
+
       setCartItems(data);
     };
-  
+
     fetchCartItems();
   }, [token, setCartItems]);
 
@@ -114,7 +114,7 @@ const CartPage = () => {
             <div key={product.id} className="flex items-center border-b mb-4 pb-4">
               <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="mr-4 w-32 h-32" />
               <div className="flex-grow">
-                <h2 className="font-bold">{product.name}</h2>
+                <h2 className="font-bold">{product.productName}</h2>
                 <p>Price: {product.productPrice}</p>
                 <p>Quantity: {product.quantity}</p>
                 <div className="flex -mx-2 mt-3 gap-12 justify-end mr-10">
@@ -140,12 +140,14 @@ const CartPage = () => {
         <div className="ml-12 w-1/4">
           <h2 className="font-semibold text-3xl border-b mb-4 pb-4">Summary</h2>
           <div className="flex justify-between border-b pb-4">
-            <p>Total:</p>
-            {/* <p>{totalPrice}</p> */}
+            <p className="font-semibold">Total:</p>
+            <p className="font-bold">{totalPrice} zł</p>
           </div>
-          <button className="mt-6 py-4 w-full tracking-wide text-white transition-colors duration-200 transform bg-black rounded-full hover:bg-[#383838]">
-            Place an order
-          </button>
+          <Link href="/order">
+            <button className="mt-6 py-4 w-full tracking-wide text-white transition-colors duration-200 transform bg-black rounded-full hover:bg-[#383838]">
+              Place an order
+            </button>
+          </Link>
         </div>
       </div>
     </div>
