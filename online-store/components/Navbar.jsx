@@ -14,6 +14,33 @@ const Navbar = () => {
 
     const { token, setToken } = useContext(NavigationContext);
 
+    const [userRole, setUserRole] = useState(null);
+
+    const fetchUserRole = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/users/userDetails', {
+                headers: {
+                    'Authorization': `Bearer ${token.accessToken}`,
+                },
+            });
+
+            if (response.ok) {
+                const { roles } = await response.json();
+                setUserRole(roles.some(role => role.name === 'ROLE_ADMIN') ? 'ROLE_ADMIN' : 'ROLE_USER');
+            } else {
+                console.error('Error fetching user details:', await response.text());
+            }
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            fetchUserRole();
+        }
+    }, [token]);
+
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         setToken(null);
@@ -57,6 +84,16 @@ const Navbar = () => {
                         <button className="lg:flexCenter px-4 py-2 text-sm hover:underline" onClick={handleLogout}>
                             Logout
                         </button>
+                        {userRole === 'ROLE_ADMIN' && (
+                            <Link href="/admin">
+                                <Image src="/admin-icon.svg"
+                                    alt="admin"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full hover:bg-gray-10 p-2"
+                                />
+                            </Link>
+                        )}
                     </>
                 ) : (
                     <>

@@ -30,6 +30,14 @@ const Hero = () => {
     fetchCategories();
   }, []);
 
+  const temporaryImages = [
+    'creatine.png',
+    'protein.jpg',
+    'vitamins.jpg',
+    'equipment.jpg',
+    'pre-workout.jpeg',
+  ];
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -37,14 +45,17 @@ const Hero = () => {
   return (
 
     <section className="container mx-auto flex-col flex md:flex-row gap-6 justify-center">
-      {!loading ? categories.map((category) => (
+      {!loading ? categories.map((category, index) => (
         <div key={category.id}>
           <Link href={`/category/${getSlug(category.id)}`}>
             <div className="relative max-w-xs overflow-hidden bg-cover bg-no-repeat">
-              <img src={category.image}
+              <img src={temporaryImages[index % temporaryImages.length]}
+                alt={category.name}
+                className="w-full h-96 cursor-pointer object-cover max-w-xs transition duration-300 ease-in-out hover:scale-110" />
+              {/* <img src={category.image}
                 alt={category.name}
                 className="w-full h-96 cursor-pointer object-cover max-w-xs transition duration-300 ease-in-out hover:scale-110"
-              />
+              /> */}
               <div className="absolute left-0 bottom-0 p-4 text-white text-3xl font-bold">
                 <p> {category.title}</p>
               </div>

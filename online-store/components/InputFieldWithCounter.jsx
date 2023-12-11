@@ -3,7 +3,7 @@ const TextAreaField = ({ label, value, onChange, error, maxLength }) => (
     <div className="flex flex-col">
       <label>{label}</label>
       <textarea className="w-96 h-24 border border-black rounded-lg p-2" value={value} onChange={onChange} maxLength={maxLength} />
-      {error && <p className="text-orange-500 text-sm">{error} ⚠️</p>}
+      {error && <p className="text-orange-500 text-xs">{error}</p>}
     </div>
   );
   
