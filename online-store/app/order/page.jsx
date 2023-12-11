@@ -69,10 +69,9 @@ const OrderPage = () => {
             return;
         }
 
-        const orderResponse = await response.text();
-        const orderId = orderResponse.id
+        const id = await response.text();
 
-        const paymentResponse = await fetch(`http://localhost:8080/api/orders/process-payment/${orderId}`, {
+        const paymentResponse = await fetch(`http://localhost:8080/api/orders/process-payment/${id}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token.accessToken}`,

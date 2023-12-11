@@ -1,14 +1,36 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { products } from '../data/mockData';
 import ProductCard from '../components/ProductCard';
 
 const CategoryPage = ({ category }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const categoryProducts = products.filter((product) => 
-        product.categories.includes(category.name.toLowerCase()) && product.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-);
+    const [categoryProducts, setCategoryProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProductsByCategory = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/products/category/${category.id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products by category');
+                }
+
+                const productsByCategory = await response.json();
+                setCategoryProducts(productsByCategory);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProductsByCategory();
+    }, [category.id]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <section>
@@ -25,9 +47,11 @@ const CategoryPage = ({ category }) => {
                 </div>
             </div>
             <div className="category-products max-w-1/2">
-                {categoryProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
+                {categoryProducts
+                    .filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                    ))}
             </div>
         </section>
     );

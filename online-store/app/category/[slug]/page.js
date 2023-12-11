@@ -1,18 +1,36 @@
-import { categories } from '../../../data/mockData';
+"use client"
+
+import React, { useState, useEffect } from 'react';
 import Category from '../../../components/Category';
-import { getSlug } from '@/data/getSlug';
 
 const CategoryPage = ({ params }) => {
-    const { slug } = params
+    const { slug } = params;
+    const [category, setCategory] = useState(null);
 
-    const category = categories.find((c) => getSlug(c.name) === slug) // todo: backend (baza danych)
-    //console.log(products.map(p=>getSlug(p.name)))
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/categories/${slug}`);
+
+                if (response.ok) {
+                    const categoryData = await response.json();
+                    setCategory(categoryData);
+                } else {
+                    console.error('Error fetching category:', await response.text());
+                }
+            } catch (error) {
+                console.error('Error fetching category:', error);
+            }
+        };
+
+        fetchCategory();
+    }, [slug]);
 
     if (!category) {
         return <div>Category not found</div>
+    } else {
+        return <Category category={category} />
     }
-
-    return <Category category={category} />
 }
 
-export default CategoryPage
+export default CategoryPage;

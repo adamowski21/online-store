@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import ProductDetailsComponent from '../../../components/ProductDetailsComponent';
-import { getSlug } from '@/data/getSlug';
 
 const ProductDetails = ({ params }) => {
     const { slug } = params;

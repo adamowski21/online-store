@@ -2,12 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
-import { getSlug } from '@/data/getSlug';
 
 const Products = () => {
 
     const [products, setProducts] = useState([]);
-    const [imageUrls, setImageUrls] = useState({});
 
     useEffect(() => {
         const fetchProducts = async () => {
