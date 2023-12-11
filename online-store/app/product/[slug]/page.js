@@ -28,7 +28,7 @@ const ProductDetails = ({ params }) => {
     }, [slug]);
 
     if (!product) {
-        return <div>Loading...</div>;
+        return <div>Product not found</div>;
     }
 
     return <ProductDetailsComponent product={product} />;

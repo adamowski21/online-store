@@ -13,7 +13,7 @@ const InputField = ({ label, type, value, onChange, error, readOnly, width }) =>
             className={"border border-black rounded-lg p-3 w-full"}
             readOnly={readOnly}
         />
-        {error && <p className="text-orange-500 text-sm">{error} ⚠️</p>}
+        {error && <p className="text-orange-500 text-xs">{error}</p>}
     </div>
 );
 
