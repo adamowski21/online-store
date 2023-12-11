@@ -7,7 +7,9 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+
   const [cartItems, setCartItems] = useState([]);
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -20,9 +22,20 @@ export const CartProvider = ({ children }) => {
         console.error('Error fetching products:', await response.text());
       }
     };
+    // const localData = localStorage.getItem('cartItems');
+    // setCartItems(JSON.parse(localData) || [])
 
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('cartItems');
+  };
 
   return (
     <CartContext.Provider value={{ products, cartItems, setCartItems }}>
