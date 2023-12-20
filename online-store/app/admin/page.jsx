@@ -46,6 +46,7 @@ const AdminPage = () => {
   const [isGetAllUsersOpen, setIsGetAllUsersOpen] = useState(false);
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([])
 
   const [users, setUsers] = useState([]);
 
@@ -107,7 +108,7 @@ const AdminPage = () => {
     let isValid = true;
 
     if (!categoryId) {
-      setCategoryIdError("Category ID is required.");
+      setCategoryIdError("Category is required.");
       isValid = false;
     } else {
       setCategoryIdError("");
@@ -196,7 +197,17 @@ const AdminPage = () => {
     } else {
       console.error('Error fetching products:', await response.text());
     }
-  }
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch('http://localhost:8080/api/categories')
+      const data = await response.json();
+      setCategories(data);
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleEditProduct = async (name) => {
 
@@ -381,7 +392,21 @@ const AdminPage = () => {
         {addProductMessage && <p className="text-green-500 text-sm mb-4">{addProductMessage}</p>}
         {isAddProductOpen && (
           <form onSubmit={handleAddSubmit}>
-            <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} />
+            {/* <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} /> */}
+            <label htmlFor="category" className="block text-sm text-gray-56">Category</label>
+            <select id="category"
+              value={categoryId}
+              onChange={e => setCategoryId(e.target.value)}
+              className="border border-black rounded-lg p-3 w-full mb-4"
+            >
+              <option value="" disabled>Choose category</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {categoryIdError && <p className="text-orange-500 text-xs">{categoryIdError}</p>}
             <InputField label="Product Name" value={name} onChange={e => setName(e.target.value)} error={nameError} />
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />
@@ -406,7 +431,7 @@ const AdminPage = () => {
                     <div>
                       <h3 className="text-xl font-bold mb-2">{product.name}</h3>
                       <div className="flex justify-center items-center mt-4 mb-2">
-                          <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="w-32 h-32 object-cover mb-4" />
+                        <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="w-32 h-32 object-cover mb-4" />
                       </div>
                       <p className="text-gray-700 mb-1">Category ID: {product.categoryId}</p>
                       <p className="text-gray-700 mb-1">Description: {product.description}</p>
@@ -433,7 +458,21 @@ const AdminPage = () => {
                 Back
               </button>
             </div>
-            <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} />
+            {/* <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} /> */}
+            <label htmlFor="category" className="block text-sm text-gray-56">Category</label>
+            <select id="category"
+              value={categoryId}
+              onChange={e => setCategoryId(e.target.value)}
+              className="border border-black rounded-lg p-3 w-full mb-4"
+            >
+              <option value="" disabled>Choose category</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {categoryIdError && <p className="text-orange-500 text-xs">{categoryIdError}</p>}
             <InputField label="Product Name" value={name} onChange={e => setName(e.target.value)} error={nameError} />
             <InputFieldWithCounter label="Description" value={description} onChange={e => setDescription(e.target.value)} error={descriptionError} maxLength={300} />
             <InputField label="Price" value={price} onChange={e => setPrice(e.target.value)} error={priceError} />

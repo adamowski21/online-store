@@ -141,7 +141,7 @@ const CartPage = () => {
           <h2 className="font-semibold text-3xl border-b mb-4 pb-4">Summary</h2>
           <div className="flex justify-between border-b pb-4">
             <p className="font-semibold">Total:</p>
-            <p className="font-bold">{totalPrice} zł</p>
+            <p className="font-bold">{totalPrice.toFixed(2)} zł</p>
           </div>
           <Link href="/order">
             <button className="mt-6 py-4 w-full tracking-wide text-white transition-colors duration-200 transform bg-black rounded-full hover:bg-[#383838]">

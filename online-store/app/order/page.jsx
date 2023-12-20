@@ -171,11 +171,11 @@ const OrderPage = () => {
                             <img src={`http://localhost:8080/api/products/image/${product.fileName}`} className="w-24 h-24 my-2" />
                             <p>Quantity: {product.quantity}</p>
                             <span>Price: {product.productPrice * product.quantity} zł </span>
-                            <span className="text-sm">({product.productPrice} zł each one)</span>
+                            <span className="text-sm">({(product.productPrice).toFixed(2)} zł each one)</span>
                         </div>
                     ))}
                     <div className="mt-10">
-                        <span className="font-semibold text-xl">Total:</span> <span className="font-bold text-xl">{total} zł</span>
+                        <span className="font-semibold text-xl">Total:</span> <span className="font-bold text-xl">{total.toFixed(2)} zł</span>
                         <button
                             onClick={handleGoToPayment}
                             type="submit"
