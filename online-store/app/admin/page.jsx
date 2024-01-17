@@ -386,20 +386,20 @@ const AdminPage = () => {
       <div className="flex flex-col items-center w-1/2">
         <h2 className="flex items-center text-2xl mb-4 group">
           <Image src="/product-icon.svg" alt="product" width={32} height={32} className="mr-2" />
-          Products
+          Produkty
         </h2>
-        <ActionButton iconSrc="/plus-icon.svg" altText="plus" actionText="Add Product" onClick={handleAddProductClick} />
+        <ActionButton iconSrc="/plus-icon.svg" altText="plus" actionText="Dodaj produkt" onClick={handleAddProductClick} />
         {addProductMessage && <p className="text-green-500 text-sm mb-4">{addProductMessage}</p>}
         {isAddProductOpen && (
           <form onSubmit={handleAddSubmit}>
             {/* <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} /> */}
-            <label htmlFor="category" className="block text-sm text-gray-56">Category</label>
+            <label htmlFor="category" className="block text-sm text-gray-56">Kategoria</label>
             <select id="category"
               value={categoryId}
               onChange={e => setCategoryId(e.target.value)}
               className="border border-black rounded-lg p-3 w-full mb-4"
             >
-              <option value="" disabled>Choose category</option>
+              <option value="" disabled>Wybierz kategorię</option>
               {categories.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -414,12 +414,12 @@ const AdminPage = () => {
             {selectedImage && <img src={selectedImage} alt="productImage" width="100" height="100" className="border border-gray-300 rounded mt-4" />}
             <div className="flex justify-center mb-2">
               <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded">
-                Submit
+                Zatwierdź
               </button>
             </div>
           </form>
         )}
-        <ActionButton iconSrc="/edit-icon.svg" altText="edit" actionText="Edit Product" onClick={handleEditProductClick} />
+        <ActionButton iconSrc="/edit-icon.svg" altText="edit" actionText="Edytuj Produkt" onClick={handleEditProductClick} />
         {editProductMessage && <p className="text-green-500 text-sm mb-4">{editProductMessage}</p>}
         <div>
           {isEditProductOpen && (
@@ -433,13 +433,13 @@ const AdminPage = () => {
                       <div className="flex justify-center items-center mt-4 mb-2">
                         <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="w-32 h-32 object-cover mb-4" />
                       </div>
-                      <p className="text-gray-700 mb-1">Category ID: {product.categoryId}</p>
-                      <p className="text-gray-700 mb-1">Description: {product.description}</p>
-                      <p className="text-gray-700 mb-2">Price: {product.price} zł</p>
+                      <p className="text-gray-700 mb-1">ID kategorii: {product.categoryId}</p>
+                      <p className="text-gray-700 mb-1">Opis: {product.description}</p>
+                      <p className="text-gray-700 mb-2">Cena: {product.price} zł</p>
                     </div>
                     <div className="flex items-center justify-between gap-14 mt-auto flex-wrap">
                       <button onClick={() => handleEditProduct(product.name)} className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">
-                        Edit
+                        Edytuj
                       </button>
                       <button onClick={() => { setProductIdToDelete(product.id); handleDeleteConfirmation(); }} className="flex items-center justify-center py-2 px-2 bg-red-600 rounded focus:outline-none hover:font-bold group flex-shrink-0">
                         <Image src="/delete-icon.svg" alt="delete" width={24} height={24} className="transform group-hover:scale-110" />
@@ -455,17 +455,17 @@ const AdminPage = () => {
           <form onSubmit={handleEditSubmit} className="p-4 rounded-2xl shadow-border mt-4 mb-4">
             <div className="flex">
               <button type="button" onClick={handleBackToProducts} className=" ml-auto px-2 py-1 mb-4 tracking-wide text-white text-sm transition-colors duration-200 transform bg-black rounded hover:bg-[#383838]">
-                Back
+                Powrót
               </button>
             </div>
             {/* <InputField label="Category ID" value={categoryId} onChange={e => setCategoryId(e.target.value)} error={categoryIdError} /> */}
-            <label htmlFor="category" className="block text-sm text-gray-56">Category</label>
+            <label htmlFor="category" className="block text-sm text-gray-56">Kategoria</label>
             <select id="category"
               value={categoryId}
               onChange={e => setCategoryId(e.target.value)}
               className="border border-black rounded-lg p-3 w-full mb-4"
             >
-              <option value="" disabled>Choose category</option>
+              <option value="" disabled>Wybierz kategorię</option>
               {categories.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -480,7 +480,7 @@ const AdminPage = () => {
             {selectedImage && <img src={selectedImage} alt="productImage" width="100" height="100" className="border border-gray-300 rounded mt-4" />}
             <div className="flex justify-center mb-2">
               <button type="submit" className="bg-rose-700 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded mt-4">
-                Submit
+                Zatwierdź
               </button>
             </div>
           </form>
@@ -503,16 +503,16 @@ const AdminPage = () => {
       <div className="flex flex-col items-center w-1/2">
         <h2 className="flex items-center text-2xl mb-4 group">
           <Image src="/users-icon.svg" alt="user" width={32} height={32} className="mr-2" />
-          Users
+          Użytkownicy
         </h2>
-        <ActionButton iconSrc="/get-icon.svg" altText="get" actionText="Get All Users" onClick={handleGetAllUsers} />
+        <ActionButton iconSrc="/get-icon.svg" altText="get" actionText="Pokaż użytkowników" onClick={handleGetAllUsers} />
 
         {isGetAllUsersOpen && (
           <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4 mb-2">
             {users.map(user => (
               <div key={user.id} className="p-4 border rounded shadow">
                 <h3 className="text-xl font-bold mb-2">Email: {user.email}</h3>
-                <p className="text-gray-700 mb-2">Role: {user.roles[0].name}</p>
+                <p className="text-gray-700 mb-2">Rola: {user.roles[0].name}</p>
                 <div className="mt-auto flex justify-end">
                   <button onClick={() => handleDeleteUser(user.id)} className="flex items-center justify-center py-2 px-2 bg-red-600 rounded focus:outline-none hover:font-bold group flex-shrink-0">
                     <Image src="/delete-icon.svg" alt="delete" width={24} height={24} className="transform group-hover:scale-110" />

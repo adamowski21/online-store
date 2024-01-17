@@ -25,8 +25,8 @@ const UserPage = () => {
     useEffect(() => {
         let tempPasswordErrors = {};
 
-        if (newPassword.length < 8) tempPasswordErrors.newPassword = 'Password must be at least 8 characters';
-        if (newPassword !== repeatNewPassword) tempPasswordErrors.repeatNewPassword = 'Passwords must match';
+        if (newPassword.length < 8) tempPasswordErrors.newPassword = 'Hasło musi posiadać co najmniej 8 znaków';
+        if (newPassword !== repeatNewPassword) tempPasswordErrors.repeatNewPassword = 'Hasła muszą być takie same';
 
         setPasswordErrors(tempPasswordErrors);
     }, [newPassword, repeatNewPassword]);
@@ -144,7 +144,7 @@ const UserPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center m-10 text-lg">
-            <h1 className="text-4xl font-semibold text-center mb-10">Account details</h1>
+            <h1 className="text-4xl font-semibold text-center mb-10">Szczegóły konta</h1>
             <div className="space-y-6">
                 <div>
                     <div>
@@ -156,33 +156,33 @@ const UserPage = () => {
                 </div>
                 <div>
                     <div>
-                        <label className="text-sm">Password:</label>
+                        <label className="text-sm">Hasło:</label>
                     </div>
                     <div>
                         <input type="password" name="password" value={currentPassword} readOnly className="border border-black rounded-lg p-3 w-full" />
                     </div>
                     <div className="w-full flex justify-end">
                         <button type="button" className="underline text-sm" onClick={() => setPasswordDialogOpen(true)}>
-                            Edit
+                            Edytuj
                         </button>
                     </div>
-                    <Dialog isOpen={isPasswordDialogOpen} onClose={() => { setPasswordDialogOpen(false); resetPasswordFields(); }} title="Edit your password">
+                    <Dialog isOpen={isPasswordDialogOpen} onClose={() => { setPasswordDialogOpen(false); resetPasswordFields(); }} title="Zmień swoje hasło">
                         <form onSubmit={handlePasswordSubmit}>
                             <InputField
-                                label="Current Password"
+                                label="Aktualne hasło"
                                 type="password"
                                 value={currentPassword}
                                 readOnly
                             />
                             <InputField
-                                label="New Password"
+                                label="Nowe hasło"
                                 type="password"
                                 value={newPassword}
                                 onChange={handleNewPasswordChange}
                                 error={passwordErrors.newPassword}
                             />
                             <InputField
-                                label="Repeat New Password"
+                                label="Powtórz nowe hasło"
                                 type="password"
                                 value={repeatNewPassword}
                                 onChange={handleRepeatNewPasswordChange}
@@ -194,7 +194,7 @@ const UserPage = () => {
                                     className={`border rounded-full px-4 ${isPasswordFormValid ? 'bg-black text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                     disabled={!isPasswordFormValid}
                                 >
-                                    Submit
+                                    Zatwierdź
                                 </button>
                             </div>
                         </form>
@@ -202,10 +202,10 @@ const UserPage = () => {
                 </div>
                 <div className="flex justify-between items-center border-t border-b p-6">
                     <div className="mr-10">
-                        Delete account
+                        Usuń konto
                     </div>
                     <button className="px-2 py-1 text-base tracking-wide rounded-full border hover:border-black" onClick={handleDeleteConfirmation}>
-                        Delete
+                        Usuń
                     </button>
                 </div>
                 {/* <div className="mt-8 text-right mr-5">
@@ -216,14 +216,14 @@ const UserPage = () => {
             </div>
             <Dialog isOpen={isDeleteConfirmationOpen} onClose={() => setDeleteConfirmationOpen(false)} title="Confirm Deletion">
                 <div className="text-center">
-                    Are you sure you want to delete your account?
+                    Czy na pewno chcesz usunąć konto?
                 </div>
                 <div className="flex justify-center mt-6 space-x-4">
                     <button className="bg-green-50 text-white px-5 py-2 rounded-full" onClick={handleDeleteAccount}>
-                        Yes
+                        Tak
                     </button>
                     <button className="bg-red-500 text-white px-6 py-2 rounded-full" onClick={handleCancelDelete}>
-                        No
+                        Nie
                     </button>
                 </div>
             </Dialog>

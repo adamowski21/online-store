@@ -18,18 +18,18 @@ const page = () => {
     e.preventDefault();
     let tempErrors = {};
 
-    if (!email) tempErrors.email = 'Email is required';
+    if (!email) tempErrors.email = 'Email jest wymagany';
     if (!password) {
-      tempErrors.password = 'Password is required';
+      tempErrors.password = 'Hasło jest wymagane';
     } else {
       if (!/[A-Z]/.test(password)) {
-        tempErrors.password = 'Password must contain at least one uppercase letter';
+        tempErrors.password = 'Hasło musi zawierać co najmniej jedną wielką literę.';
       }
       if (!/[!@#$%^&*]/.test(password)) {
-        tempErrors.password = 'Password must contain at least one special character';
+        tempErrors.password = 'Hasło musi zawierać co najmniej jeden znak specjalny.';
       }
       if (password.length < 8) {
-        tempErrors.password = 'Password must be at least 8 characters long';
+        tempErrors.password = 'Hasło musi zawierać co najmniej 8 znaków.';
       }
     }
 
@@ -63,10 +63,12 @@ const page = () => {
             setErrors({ email: 'This email is already in use' });
           } else {
             console.error('Login failed:', errorData);
+            setErrors({ general: 'Nieprawidłowy email lub hasło' })
           }
         }
       } catch (error) {
         console.error('Login error:', error);
+        setErrors({ general: 'Nieprawidłowy email lub hasło' })
       }
     }
   };
@@ -75,7 +77,7 @@ const page = () => {
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
       <div className="w-full p-6 shadow-border rounded-lg lg:max-w-xl">
         <img src="supp-logo.svg" alt="logo" className="mx-auto w-48 h-48"></img>
-        <h1 className="text-3xl font-bold text-center text-gray-56">Log in</h1>
+        <h1 className="text-3xl font-bold text-center text-gray-56">Logowanie</h1>
         <form className="mt-6" onSubmit={validateForm}>
           <div className="mb-4">
             <InputField
@@ -86,27 +88,31 @@ const page = () => {
               error={errors.email}
             />
             <InputField
-              label="Password"
+              label="Hasło"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={errors.password}
             />
           </div>
+          {errors.general && (
+            <div className="mt-4 text-sm text-center text-orange-500">
+              {errors.general}
+            </div>
+          )}
           <div className="mt-6">
-            <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-green-90 rounded-md hover:bg-black">
-              Submit
+            <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-black rounded-md hover:bg-[#383838]">
+              Zatwierdź
             </button>
           </div>
         </form>
-
         <p className="mt-4 text-sm text-center text-gray-56">
-          Don't have an account?{" "}
+          Nie posiadasz konta?{" "}
           <Link
             href="/signup"
             className="font-medium text-blue-600 hover:underline"
           >
-            Sign up
+            Zarejestruj się
           </Link>
         </p>
       </div>

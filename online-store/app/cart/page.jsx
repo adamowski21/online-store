@@ -109,14 +109,14 @@ const CartPage = () => {
     <div className="flex justify-center min-h-screen mt-6">
       <div className="flex w-full max-w-4xl mx-auto">
         <div className="w-3/4">
-          <h1 className="font-semibold text-3xl mb-6">Cart</h1>
+          <h1 className="font-semibold text-3xl mb-6">Koszyk</h1>
           {cartItems && cartItems.map((product) => (
             <div key={product.id} className="flex items-center border-b mb-4 pb-4">
               <img src={`http://localhost:8080/api/products/image/${product.fileName}`} alt={product.name} className="mr-4 w-32 h-32" />
               <div className="flex-grow">
                 <h2 className="font-bold">{product.productName}</h2>
-                <p>Price: {product.productPrice}</p>
-                <p>Quantity: {product.quantity}</p>
+                <p>Cena: {product.productPrice}</p>
+                <p>Ilość: {product.quantity}</p>
                 <div className="flex -mx-2 mt-3 gap-12 justify-end mr-10">
                   <div className="flex items-center gap-10">
                     <div className="flex items-center">
@@ -138,14 +138,14 @@ const CartPage = () => {
           ))}
         </div>
         <div className="ml-12 w-1/4">
-          <h2 className="font-semibold text-3xl border-b mb-4 pb-4">Summary</h2>
+          <h2 className="font-semibold text-3xl border-b mb-4 pb-4">Podsumowanie</h2>
           <div className="flex justify-between border-b pb-4">
-            <p className="font-semibold">Total:</p>
+            <p className="font-semibold">Suma:</p>
             <p className="font-bold">{totalPrice.toFixed(2)} zł</p>
           </div>
           <Link href="/order">
             <button className="mt-6 py-4 w-full tracking-wide text-white transition-colors duration-200 transform bg-black rounded-full hover:bg-[#383838]">
-              Place an order
+              Złóż zamówienie
             </button>
           </Link>
         </div>

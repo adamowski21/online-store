@@ -82,7 +82,7 @@ const Navbar = () => {
                             </button>
                         </Link>
                         <button className="lg:flexCenter px-4 py-2 text-sm hover:underline" onClick={handleLogout}>
-                            Logout
+                            Wyloguj
                         </button>
                         {userRole === 'ROLE_ADMIN' && (
                             <Link href="/admin">
@@ -104,7 +104,7 @@ const Navbar = () => {
                                     width={24}
                                     height={24}
                                 />
-                                Login
+                                Logowanie
                             </button>
                         </Link>
                         <Link href="/signup">
@@ -114,7 +114,7 @@ const Navbar = () => {
                                     width={24}
                                     height={24}
                                 />
-                                Sign up
+                                Rejestracja
                             </button>
                         </Link>
                     </>

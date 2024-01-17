@@ -146,43 +146,43 @@ const OrderPage = () => {
         <div className="flex justify-center mt-10">
             <div className="flex gap-20">
                 <form>
-                    <label htmlFor="deliveryType" className="block text-sm text-gray-700">Delivery Type</label>
+                    <label htmlFor="deliveryType" className="block text-sm text-gray-700">Dostawca</label>
                     <select value={deliveryType} onChange={e => setDeliveryType(e.target.value)} error={deliveryTypeError} className="border border-black rounded-lg p-3 w-full mb-4">
-                        <option value="" hidden>Select delivery type</option>
+                        <option value="" hidden>Wybierz dostawcę</option>
                         <option value="Inpost">Inpost</option>
                         <option value="DPD">DPD</option>
                         <option value="FedEx">FedEx</option>
                         <option value="Poczta Polska">Poczta Polska</option>
                     </select>
-                    <InputField label="First Name" value={firstName} onChange={e => setFirstName(e.target.value)} onBlur={() => setFirstNameTouched(true)} error={firstNameError} />
-                    <InputField label="Last Name" value={lastName} onChange={e => setLastName(e.target.value)} error={lastNameError} />
-                    <InputField label="Phone Number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} error={phoneNumberError} />
-                    <InputField label="Street" value={street} onChange={e => setStreet(e.target.value)} error={streetError} />
-                    <InputField label="House Number" value={houseNumber} onChange={e => setHouseNumber(e.target.value)} error={houseNumberError} />
-                    <InputField label="Postal Code" value={postalCode} onChange={e => setPostalCode(e.target.value)} error={postalCodeError} />
-                    <InputField label="City" value={city} onChange={e => setCity(e.target.value)} error={cityError} />
-                    <InputField label="Country" value={country} onChange={e => setCountry(e.target.value)} error={countryError} />
+                    <InputField label="Imię" value={firstName} onChange={e => setFirstName(e.target.value)} error={firstNameError} />
+                    <InputField label="Nazwisko" value={lastName} onChange={e => setLastName(e.target.value)} error={lastNameError} />
+                    <InputField label="Numer telefonu" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} error={phoneNumberError} />
+                    <InputField label="Ulica" value={street} onChange={e => setStreet(e.target.value)} error={streetError} />
+                    <InputField label="Numer domu" value={houseNumber} onChange={e => setHouseNumber(e.target.value)} error={houseNumberError} />
+                    <InputField label="Kod pocztowy" value={postalCode} onChange={e => setPostalCode(e.target.value)} error={postalCodeError} />
+                    <InputField label="Miasto" value={city} onChange={e => setCity(e.target.value)} error={cityError} />
+                    <InputField label="Kraj" value={country} onChange={e => setCountry(e.target.value)} error={countryError} />
                 </form>
                 <div>
-                    <h1 className="font-semibold text-2xl mb-6">Ordered products:</h1>
+                    <h1 className="font-semibold text-2xl mb-6">Zamówione produkty:</h1>
                     {cartItems && cartItems.map((product) => (
                         <div key={product.id} className="mb-4 border-b max-w-xs">
                             <h2>{product.productName}</h2>
                             <img src={`http://localhost:8080/api/products/image/${product.fileName}`} className="w-24 h-24 my-2" />
-                            <p>Quantity: {product.quantity}</p>
-                            <span>Price: {product.productPrice * product.quantity} zł </span>
-                            <span className="text-sm">({(product.productPrice).toFixed(2)} zł each one)</span>
+                            <p>Ilość: {product.quantity}</p>
+                            <span>Cena: {product.productPrice * product.quantity} zł </span>
+                            <span className="text-sm">({(product.productPrice).toFixed(2)} zł za jeden)</span>
                         </div>
                     ))}
                     <div className="mt-10">
-                        <span className="font-semibold text-xl">Total:</span> <span className="font-bold text-xl">{total.toFixed(2)} zł</span>
+                        <span className="font-semibold text-xl">Suma:</span> <span className="font-bold text-xl">{total.toFixed(2)} zł</span>
                         <button
                             onClick={handleGoToPayment}
                             type="submit"
                             className={`mt-6 py-4 w-full tracking-wide transition-colors duration-200 transform rounded-full ${isFormValid ? 'bg-black text-white hover:bg-[#383838]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                             disabled={!isFormValid}
                         >
-                            Go to payment
+                            Przejdź do płatności
                         </button>
                     </div>
                 </div>
