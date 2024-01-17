@@ -208,11 +208,6 @@ const UserPage = () => {
                         Usuń
                     </button>
                 </div>
-                {/* <div className="mt-8 text-right mr-5">
-                    <button className="px-3 py-1 tracking-wide text-white transition-colors duration-200 transform bg-black rounded-full hover:bg-[#383838]">
-                        Save
-                    </button>
-                </div> */}
             </div>
             <Dialog isOpen={isDeleteConfirmationOpen} onClose={() => setDeleteConfirmationOpen(false)} title="Confirm Deletion">
                 <div className="text-center">
