@@ -8,4 +8,4 @@ The technologies used in the project:
 
 Preview
 
-<img src="https://github.com/adamowski21/projekt/assets/76078599/2d1cfb33-81ac-4bdc-b1e6-4a7edd9b548c" width="851" height="315" />
+<img src="https://github.com/adamowski21/projekt/assets/76078599/2d1cfb33-81ac-4bdc-b1e6-4a7edd9b548c" width="600" height="300" />
